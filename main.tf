@@ -43,7 +43,6 @@ module "eks" {
   vpc_id           = module.vpc.vpc_id
   subnet_ids       = module.vpc.private_subnet_ids
   eks_cluster_name = "my_eks_cluster_name" #Name of the EKS Cluster to create
-  private_subnet_cidr = local.private_subnet_cidr #CIDR blocks for private subnets
   cluster_version  = 1.33  #Kubernetes version for the EKS control plane
   
   node_groups = {
