@@ -16,12 +16,6 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-variable "private_subnet_cidr" {
-  description = "private subnet CIDR block"
-  type        = list(string)
-}
-
-
 variable "eks_cluster_name" {
   description = "The name of my EKS cluster"
   type = string
