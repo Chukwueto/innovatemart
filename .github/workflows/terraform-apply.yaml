@@ -2,8 +2,9 @@ name: 'Terraform Apply'
 
 on:
   push:
-    branches:
-      - main
+    branches: [develop, main]
+  pull_request:
+    branches: [main]
 
 env:
   TF_VERSION: '1.6.0'
@@ -40,23 +41,14 @@ jobs:
       run: |
         terraform init \
           -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" \
-          -backend-config="key=${{ github.repository }}/terraform.tfstate" \
+          -backend-config="key=dev/terraform-state-file" \
           -backend-config="region=${{ env.AWS_REGION }}" 
 
+    - name: Terraform Plan
+      if: github.ref == 'refs/heads/develop' || (github.event_name == 'pull_request')
+      run: terraform plan -input=false -lock=false 
+
     - name: Terraform Apply
-      id: apply
-      run: |
-       terraform apply -auto-approve
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -input=false -auto-approve 
 
-    - name: Apply Summary
-      if: always()
-      run: |
-        echo "## Terraform Apply Summary 🚀" >> $GITHUB_STEP_SUMMARY
-        echo "- **Init:** ${{ steps.init.outcome }}" >> $GITHUB_STEP_SUMMARY
-        echo "- **Apply:** ${{ steps.apply.outcome }}" >> $GITHUB_STEP_SUMMARY
-
-        if [ "${{ steps.apply.outcome }}" == "success" ]; then
-          echo "- **Result:** ✅ Infrastructure applied successfully" >> $GITHUB_STEP_SUMMARY
-        else
-          echo "- **Result:** ❌ Apply failed, check logs" >> $GITHUB_STEP_SUMMARY
-        fi
