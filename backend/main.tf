@@ -12,6 +12,18 @@ provider "aws" {
   region = "us-east-1"
 }
 
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "practice-eks-install-bucket"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+}
 
 terraform {
   backend "s3" {
