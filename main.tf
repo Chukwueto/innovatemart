@@ -34,13 +34,17 @@ terraform {
   }
 }
 
+locals {
+  private_subnet_cidr = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"] #CIDR blocks for private subnets
+}
+
 module "vpc" {
   source = "./modules/vpc"
 
   vpc_cidr            = "10.0.0.0/16"
   availability_zones  = ["us-east-1a", "us-east-1b", "us-east-1c"]  #List all the availiability zones to distribute subnets
   public_subnet_cidr  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]  #CIDR blocks for public subnets
-  private_subnet_cidr = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"] #CIDR blocks for private subnets
+  private_subnet_cidr = local.private_subnet_cidr #CIDR blocks for private subnets
 }
 
 
@@ -51,6 +55,7 @@ module "eks" {
   vpc_id           = module.vpc.vpc_id
   subnet_ids       = module.vpc.private_subnet_ids
   eks_cluster_name = "my_eks_cluster_name" #Name of the EKS Cluster to create
+  private_subnet_cidr = local.private_subnet_cidr #CIDR blocks for private subnets
   cluster_version  = 1.33  #Kubernetes version for the EKS control plane
   
   node_groups = {

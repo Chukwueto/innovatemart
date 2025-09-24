@@ -46,7 +46,7 @@ jobs:
     - name: Terraform Apply
       id: apply
       run: |
-        terraform apply -auto-approve tfplan || terraform apply -auto-approve
+       terraform apply -auto-approve
 
     - name: Apply Summary
       if: always()
