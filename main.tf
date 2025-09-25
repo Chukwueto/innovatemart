@@ -57,3 +57,13 @@ module "eks" {
     }
   }    
 }
+
+
+module "iam" {
+  source = "./modules/iam"
+
+  aws_region  = "us-east-1"
+  iam_user_name = "developer"
+  eks_cluster_name = "my_eks_cluster_name"
+  k8s_group = "my-viewer"
+}

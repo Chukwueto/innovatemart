@@ -34,15 +34,9 @@ resource "aws_iam_user_policy_attachment" "developer_eks" {
 }
 
 
-# IAM user console 
-resource "aws_iam_user" "developer" {
-  name = "developer"
-}
-
 # Temporary password for AWS Console login
 resource "aws_iam_user_login_profile" "developer_console" {
   user                    = aws_iam_user.developer.name
-  password                = "TempPassword123!"
   password_reset_required = true
 }
 
@@ -55,11 +49,4 @@ resource "aws_iam_access_key" "developer_key" {
 # Get existing EKS cluster info
 data "aws_eks_cluster" "eks" {
   name = var.eks_cluster_name
-}
-
-#  Map IAM user into Kubernetes RBAC via Access Entry
-resource "aws_eks_access_entry" "developer" {
-  cluster_name      = data.aws_eks_cluster.eks.name
-  principal_arn     = aws_iam_user.developer.arn
-  kubernetes_groups = [var.k8s_group]
 }
