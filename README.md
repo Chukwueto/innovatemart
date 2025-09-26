@@ -81,7 +81,12 @@ I initialize terraform after wring my terraform file for  my backend, vpc, eks a
      ```sh
      kubectl get pods --all-namespaces
      ```
-   - You should see a list of running pods if your access is configured correctly.
+   - You should see a list of running pods if the access is configured correctly.
+   - To access the app the [url](http://a3f3f811547184326bcbe7748f55ad81-1011189989.us-east-1.elb.amazonaws.com/) given after running 
+    ```sh
+     kubectl get svc ui
+     ```
+    
 
 ---
 
